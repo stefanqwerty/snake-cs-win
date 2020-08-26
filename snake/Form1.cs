@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Windows.Input;
 using System.Drawing;
+using System.Resources;
 
 namespace snake
 {
@@ -28,21 +29,23 @@ namespace snake
             SwitchBackColor(e.KeyCode, inactiveColor);
         }
 
+        Game g = new Game();
+
         private void SwitchBackColor(Keys key, Color color)
         {
             switch (key)
             {
                 case Keys.Up:
-                    labelUp.BackColor = color;
+                    g.snake.direction = Game.Snake.Direction.up;
                     break;
                 case Keys.Down:
-                    labelDown.BackColor = color;
+                    g.snake.direction = Game.Snake.Direction.down;
                     break;
                 case Keys.Left:
-                    labelLeft.BackColor = color;
+                    g.snake.direction = Game.Snake.Direction.left;
                     break;
                 case Keys.Right:
-                    labelRight.BackColor = color;
+                    g.snake.direction = Game.Snake.Direction.right;
                     break;
             }
 

@@ -1,92 +1,78 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Data.SqlClient;
-using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
 
 namespace snake
 {
-    class Game
+    public class Game
     {
         const int rows = 150;
         const int columns = 200;
         Collection<Position> allPositions = new Collection<Position>();
         int milisecondsBetweenFrames = 1000;
-        Snake snake = new Snake(rows, columns);
-        Position food;
+        public Snake snake = new Snake(rows, columns);
+        public Food food = new Food();
 
-        public enum Direction
-        {
-            up,
-            right,
-            down,
-            left
-        }
-
-        public class Position
+        public class Position : IComparable
         {
             public int column;
-
             public int row;
-
-            public Position()
-            {
-            }
 
             public Position(int sendColumn, int sendRow) => (column, row) = (sendColumn, sendRow);
 
-            public bool Equals(Position other)
-            {
-                return column == other.column && row == other.row;
-            }
+            public int CompareTo(object obj) => 0;
 
-            public Position Get(Direction direction)
-            {
-                switch (direction)
-                {
-                    case Direction.up:
-                        return new Position(column, row - 1);
-                    case Direction.down:
-                        return new Position(column, row + 1);
-                    case Direction.left:
-                        return new Position(column - 1, row);
-                    case Direction.right:
-                        return new Position(column + 1, row - 1);
-                    default:
-                        return null;
-                }
-            }
+            public bool Equals(Position other) => column == other.column && row == other.row;
         }
 
-        enum MoveResult
-        {
-            Moved,
-            Eat,
-            Dead
-        }
+        private bool IsPositionOutOfGame(Position position) => position.row < 0
+                                                            && position.row >= rows
+                                                            && position.column < 0
+                                                            && position.column >= columns;
 
-        class Snake
+        //enum MoveResult
+        //{
+        //    Moved,
+        //    Eat,
+        //    Dead
+        //}
+
+        public class Snake
         {
             public int lenght = 0;
+            public SnakeElement head;
+            public Direction direction;
+
+            public Snake()
+            {
+
+            }
+
+            public enum Direction
+            {
+                up,
+                right,
+                down,
+                left
+            }
 
             public class SnakeElement
             {
                 public Position position;
                 public SnakeElement next;
-            }
 
-            public SnakeElement head;
-            Direction direction;
+                public SnakeElement(Position sendPosition)
+                {
+                    position = sendPosition;
+                }
+            }
 
             public Snake(int rows, int columns)
             {
-                head.position = new Position(columns / 2, rows / 2);
+                head = new SnakeElement(new Position(columns / 2, rows / 2));       
+
                 lenght = 1;
                 direction = Direction.up;
             }
@@ -95,7 +81,6 @@ namespace snake
             {
                 var result = new Collection<Position>();
                 var currentSnakeElement = head;
-                result.Add(head.position);
                 while (!(currentSnakeElement is null))
                 {
                     result.Add(currentSnakeElement.position);
@@ -104,21 +89,61 @@ namespace snake
 
                 return result;
             }
+
+            public Position GetNextPosition()
+            {
+                switch (direction)
+                {
+                    case Direction.up:
+                        return new Position(head.position.column, head.position.row - 1);
+                    case Direction.down:
+                        return new Position(head.position.column, head.position.row + 1);
+                    case Direction.left:
+                        return new Position(head.position.column - 1, head.position.row);
+                    case Direction.right:
+                        return new Position(head.position.column + 1, head.position.row - 1);
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        public class Food
+        {
+            public Position position;
+            public int value;
+
+            public Food()
+            {
+                value = 1;
+            }
         }
 
         public bool NextFrame()
         {
-            var nextHeadPosition = snake.head.position;
+            var nextSnakePosition = snake.GetNextPosition();
 
-            if (food.column == snake.head.position.column)
+            if (IsPositionOutOfGame(nextSnakePosition) || snake.GetAllPositions().Contains(nextSnakePosition))
             {
-                //add block
-                food = GetNewPositionForFood();
-            }
-            if ( == snake.GetAllPositions())
-            {
-                return false;
                 //game over
+                return false;
+            }
+
+            if (nextSnakePosition.Equals(food.position))
+            {
+                void grow(int n)
+                {
+                    Snake x = new Snake();
+                    snake.lenght += n;
+                    while (n > 0)
+                    {
+                        snake.head.position = x.GetNextPosition();
+                        
+                        n--;
+                    }
+                }
+                grow(food.value);
+                food.position = GetNewPositionForFood();
             }
             return true;
         }
@@ -148,8 +173,7 @@ namespace snake
         public Game()
         {
             LoadAllPositions();
-            snake = new Snake(columns, rows);
-            food = GetNewPositionForFood();
+            food.position = GetNewPositionForFood();
         }
 
         private void LoadAllPositions()
@@ -167,8 +191,11 @@ namespace snake
         {
             //draw
             System.Threading.Thread.Sleep(milisecondsBetweenFrames);
-
+            NextFrame();
+            milisecondsBetweenFrames--;
         }
+
+
 
         public Position GetNewPositionForFood()
         {
