@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Windows.Forms;
 
 namespace snake
 {
@@ -44,6 +45,8 @@ namespace snake
             public int lenght = 0;
             public SnakeElement head;
             public Direction direction;
+            public int growfactor = 0;
+
 
             public Snake()
             {
@@ -117,6 +120,7 @@ namespace snake
             {
                 value = 1;
             }
+            
         }
 
         public bool NextFrame()
@@ -129,20 +133,17 @@ namespace snake
                 return false;
             }
 
+
+            if (snake.growfactor > 0)
+            {
+                snake.GetAllPositions().Add(nextSnakePosition);
+                snake.head.position = nextSnakePosition;
+                snake.growfactor--;
+            }
+
             if (nextSnakePosition.Equals(food.position))
             {
-                void grow(int n)
-                {
-                    Snake x = new Snake();
-                    snake.lenght += n;
-                    while (n > 0)
-                    {
-                        snake.head.position = x.GetNextPosition();
-                        
-                        n--;
-                    }
-                }
-                grow(food.value);
+                snake.growfactor += food.value;
                 food.position = GetNewPositionForFood();
             }
             return true;
@@ -194,9 +195,6 @@ namespace snake
             NextFrame();
             milisecondsBetweenFrames--;
         }
-
-
-
         public Position GetNewPositionForFood()
         {
             int k = (new Random()).Next(1, columns * rows - snake.lenght - 1);
@@ -205,5 +203,9 @@ namespace snake
                                .Skip(k - 1)
                                .First();
         }
+
+
+
+
     }
 }
