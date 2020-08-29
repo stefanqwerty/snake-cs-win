@@ -8,3 +8,13 @@ C:\Users\stefan\source\repos\snake\snake\obj\Debug\snake.csproj.CoreCompileInput
 C:\Users\stefan\source\repos\snake\snake\obj\Debug\snake.exe
 C:\Users\stefan\source\repos\snake\snake\obj\Debug\snake.pdb
 C:\Users\stefan\source\repos\snake\snake\obj\Debug\snake.csprojAssemblyReference.cache
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csprojAssemblyReference.cache
+C:\Dani\Stefan\Snake\snake\obj\Debug\Snake.Form1.resources
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.Properties.Resources.resources
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csproj.GenerateResource.cache
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csproj.CoreCompileInputs.cache
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.exe
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.pdb
+C:\Dani\Stefan\Snake\snake\bin\Debug\snake.exe.config
+C:\Dani\Stefan\Snake\snake\bin\Debug\snake.exe
+C:\Dani\Stefan\Snake\snake\bin\Debug\snake.pdb
