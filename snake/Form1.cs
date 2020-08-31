@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -8,11 +9,15 @@ namespace Snake
     {
         Color inactiveColor = SystemColors.ControlDark;
         Color activeColor = Color.Green;
+        const int blockSize = 16;
         Game g = new Game();
+        Label food;
+        List<Label> snake = new List<Label>();
 
         public Form1()
         {
             InitializeComponent();
+            food = CreateLabel("", Color.Red);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -52,24 +57,72 @@ namespace Snake
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            head.Left = convert(g.snake.Head.position.column);
-            head.Top = convert(g.snake.Head.position.row);
-
-            headLeft.Text = head.Left.ToString();
-            headTop.Text = head.Top.ToString();
-            g.NextFrame();
+            headLeft.Text = convert(g.snake.Head.position.column).ToString();
+            headTop.Text = convert(g.snake.Head.position.row).ToString();
+            gameSnakeLength.Text = g.snake.GetLength.ToString();
+            formSnakeLength.Text = snake.Count.ToString();
+            if (g.NextFrame())
+            {
+                RefreshSnake();
+                RefreshLabelLocation(food, g.food.Position);
+            }
+            else
+            {
+                Application.Exit();
+            }
         }
 
-        private int convert(int pos) => head.Width * pos;
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void RefreshSnake()
         {
-
+            AlignSnakes();
+            RefreshSnakeLocations();
         }
 
-        private void Food_Click(object sender, EventArgs e)
+        private void AlignSnakes()
         {
-
+            for (int i = 0; i < g.snake.GetLength - snake.Count; i++)
+            {
+                snake.Add(CreateLabel($"{snake.Count}"));
+            }
         }
+
+        private void RefreshSnakeLocations()
+        {
+            var i = 0;
+            var snakeElement = g.snake.Head;
+            while (snakeElement != null)
+            { 
+                RefreshLabelLocation(snake[i++], snakeElement.position);
+                snakeElement = snakeElement.next;
+            }
+        }
+
+        private void RefreshLabelLocation(Label label, Position position)
+        {
+            var oldPosition = new Position(label.Left, label.Top);
+            var convertedNewPosition = new Position(convert(position.column), convert(position.row));
+            if (!oldPosition.Equals(convertedNewPosition))
+            {
+                label.Left = convertedNewPosition.column;
+                label.Top = convertedNewPosition.row;
+            }
+        }
+
+        private Label CreateLabel(string name, Color? backColor = null)
+        {
+            var label = new Label()
+            {
+                BackColor = backColor ?? Color.FromArgb(255, 192, 128),
+                Location = new Point(460, 300),
+                Name = name,
+                Size = new Size(blockSize, blockSize),
+                Visible = true
+            };
+
+            Controls.Add(label);
+            return label;
+        }
+
+        private int convert(int pos) => blockSize * pos;
     }
 }

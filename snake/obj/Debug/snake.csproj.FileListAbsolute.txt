@@ -7,3 +7,4 @@ C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csproj.GenerateResource.cache
 C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csproj.CoreCompileInputs.cache
 C:\Dani\Stefan\Snake\snake\obj\Debug\snake.exe
 C:\Dani\Stefan\Snake\snake\obj\Debug\snake.pdb
+C:\Dani\Stefan\Snake\snake\obj\Debug\snake.csprojAssemblyReference.cache

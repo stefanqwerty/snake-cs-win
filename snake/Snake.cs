@@ -5,14 +5,13 @@ namespace Snake
 {
     public class Snake
     {
-        private int lenght = 0;
         private SnakeElement head;
         private int growfactor = 0;
         public Direction direction;
 
-        public SnakeElement Head { get => head; private set { head = value; lenght++; } }
+        public SnakeElement Head { get => head; private set { head = value; GetLength++; } }
 
-        public int GetLength => lenght;
+        public int GetLength { get; private set; } = 0;
 
         public Snake()
         {
@@ -41,7 +40,7 @@ namespace Snake
         {
             Head = new SnakeElement(new Position(columns / 2, rows / 2));
 
-            lenght = 1;
+            GetLength = 1;
             direction = Direction.up;
         }
 
@@ -50,14 +49,17 @@ namespace Snake
             if (growfactor > 0)
             {
                 growfactor--;
-                Add(position);
+                GrowNewHead(position);
                 return;
             }
 
             var currentElement = head;
+            var newNextPosition = currentElement.position;
             while (currentElement.next != null)
             {
-                currentElement.next.position = currentElement.position;
+                var temp = currentElement.next.position;
+                currentElement.next.position = newNextPosition;
+                newNextPosition = temp;
                 currentElement = currentElement.next;
             }
 
@@ -77,7 +79,7 @@ namespace Snake
             direction = newDirection;
         }
 
-        public void Add(Position position)
+        public void GrowNewHead(Position position)
         {
             var element = new SnakeElement(position);
             element.next = Head;
@@ -88,7 +90,7 @@ namespace Snake
         {
             var result = new Collection<Position>();
             var currentSnakeElement = Head.next;
-            while (!(currentSnakeElement is null))
+            while (currentSnakeElement != null)
             {
                 result.Add(currentSnakeElement.position);
                 currentSnakeElement = currentSnakeElement.next;

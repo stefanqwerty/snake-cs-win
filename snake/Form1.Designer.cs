@@ -33,11 +33,11 @@
             this.labelRight = new System.Windows.Forms.Label();
             this.labelDown = new System.Windows.Forms.Label();
             this.labelLeft = new System.Windows.Forms.Label();
-            this.head = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.headLeft = new System.Windows.Forms.Label();
             this.headTop = new System.Windows.Forms.Label();
-            this.Food = new System.Windows.Forms.Label();
+            this.gameSnakeLength = new System.Windows.Forms.Label();
+            this.formSnakeLength = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelUp
@@ -80,14 +80,6 @@
             this.labelLeft.TabIndex = 5;
             this.labelLeft.Text = " ";
             // 
-            // head
-            // 
-            this.head.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.head.Location = new System.Drawing.Point(460, 300);
-            this.head.Name = "head";
-            this.head.Size = new System.Drawing.Size(16, 16);
-            this.head.TabIndex = 6;
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -108,31 +100,42 @@
             // 
             this.headTop.AutoSize = true;
             this.headTop.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.headTop.Location = new System.Drawing.Point(901, 31);
+            this.headTop.Location = new System.Drawing.Point(900, 31);
             this.headTop.Name = "headTop";
             this.headTop.Size = new System.Drawing.Size(16, 17);
             this.headTop.TabIndex = 8;
             this.headTop.Text = "0";
             // 
-            // Food
+            // gameSnakeLength
             // 
-            this.Food.BackColor = System.Drawing.Color.Red;
-            this.Food.Location = new System.Drawing.Point(512, 256);
-            this.Food.Name = "Food";
-            this.Food.Size = new System.Drawing.Size(16, 16);
-            this.Food.TabIndex = 9;
-            this.Food.Click += new System.EventHandler(this.Food_Click);
+            this.gameSnakeLength.AutoSize = true;
+            this.gameSnakeLength.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.gameSnakeLength.Location = new System.Drawing.Point(1018, 8);
+            this.gameSnakeLength.Name = "gameSnakeLength";
+            this.gameSnakeLength.Size = new System.Drawing.Size(16, 17);
+            this.gameSnakeLength.TabIndex = 10;
+            this.gameSnakeLength.Text = "0";
+            // 
+            // formSnakeLength
+            // 
+            this.formSnakeLength.AutoSize = true;
+            this.formSnakeLength.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.formSnakeLength.Location = new System.Drawing.Point(1018, 31);
+            this.formSnakeLength.Name = "formSnakeLength";
+            this.formSnakeLength.Size = new System.Drawing.Size(16, 17);
+            this.formSnakeLength.TabIndex = 11;
+            this.formSnakeLength.Text = "0";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(1008, 729);
-            this.Controls.Add(this.Food);
+            this.ClientSize = new System.Drawing.Size(1634, 1011);
+            this.Controls.Add(this.formSnakeLength);
+            this.Controls.Add(this.gameSnakeLength);
             this.Controls.Add(this.headTop);
             this.Controls.Add(this.headLeft);
-            this.Controls.Add(this.head);
             this.Controls.Add(this.labelLeft);
             this.Controls.Add(this.labelDown);
             this.Controls.Add(this.labelRight);
@@ -145,7 +148,6 @@
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Sarpiliii";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.ResumeLayout(false);
@@ -159,11 +161,11 @@
         private System.Windows.Forms.Label labelRight;
         private System.Windows.Forms.Label labelDown;
         private System.Windows.Forms.Label labelLeft;
-        private System.Windows.Forms.Label head;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label headLeft;
         private System.Windows.Forms.Label headTop;
-        private System.Windows.Forms.Label Food;
+        private System.Windows.Forms.Label gameSnakeLength;
+        private System.Windows.Forms.Label formSnakeLength;
     }
 }
 

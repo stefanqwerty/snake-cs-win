@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Snake
 {
     public class Game
     {
-        const int rows = 60;
         const int columns = 100;
+        const int rows = 60;
         readonly Collection<Position> allPositions = new Collection<Position>();
         int milisecondsBetweenFrames = 1000;
         public Snake snake = new Snake(rows, columns);
@@ -43,7 +44,7 @@ namespace Snake
         public bool NextFrame()
         {
             var nextSnakePosition = snake.GetNextPosition();
-
+            Debug.Print(nextSnakePosition.ToString());
             if (nextSnakePosition.Equals(food.Position))
             {
                 snake.Eat(food);
@@ -52,24 +53,13 @@ namespace Snake
 
             snake.Move(nextSnakePosition);
 
-            if (nextSnakePosition.IsOutOfGame(columns, rows) || snake.GetBodyPositions().Contains(snake.Head.position))
+            if (nextSnakePosition.IsOutOfGame(columns, rows) || snake.GetBodyPositions().Contains(snake.Head.position, new PositionComparer()))
             {
                 //game over
                 return false;
             }
 
             return true;
-        }
-
-        public void mainLoop()
-        {
-            while (NextFrame())
-            {
-                System.Threading.Thread.Sleep(milisecondsBetweenFrames);
-                //draw
-
-                milisecondsBetweenFrames--;
-            }
         }
     }
 }

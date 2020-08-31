@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Snake
 {
@@ -19,5 +20,19 @@ namespace Snake
 
         public bool Equals(Position other) => column == other.column && row == other.row;
         #endregion
+    }
+
+    public class PositionComparer : IEqualityComparer<Position>
+    {
+        public bool Equals(Position x, Position y)
+        {
+            return x.Equals(y);
+        }
+
+        public int GetHashCode(Position pos)
+        {
+            int hCode = pos.column * 10000 + pos.row;
+            return hCode;
+        }
     }
 }
