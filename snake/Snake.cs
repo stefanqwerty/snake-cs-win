@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Windows.Forms;
 
 namespace Snake
 {
     public class Snake
     {
         private SnakeElement head;
-        private int growfactor = 0;
+        private int growfactor = 2;
         public Direction direction;
-
+        
         public SnakeElement Head { get => head; private set { head = value; GetLength++; } }
 
         public int GetLength { get; private set; } = 0;
@@ -40,7 +41,7 @@ namespace Snake
         {
             Head = new SnakeElement(new Position(columns / 2, rows / 2));
 
-            GetLength = 1;
+            //GetLength = 1;
             direction = Direction.up;
         }
 
@@ -66,17 +67,19 @@ namespace Snake
             head.position = position;
         }
 
-        public void TryChangeDirection(Direction newDirection)
+        public bool TryChangeDirection(Direction newDirection)
         {
             if ((newDirection == Direction.up && direction == Direction.down)
              || (newDirection == Direction.right && direction == Direction.left)
              || (newDirection == Direction.down && direction == Direction.up)
              || (newDirection == Direction.left && direction == Direction.right))
             {
-                return;
+                return false;
             }
 
             direction = newDirection;
+            
+            return true;
         }
 
         public void GrowNewHead(Position position)

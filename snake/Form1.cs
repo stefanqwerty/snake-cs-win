@@ -7,68 +7,88 @@ namespace Snake
 {
     public partial class Form1 : Form
     {
-        Color inactiveColor = SystemColors.ControlDark;
-        Color activeColor = Color.Green;
-        const int blockSize = 16;
-        Game g = new Game();
-        Label food;
-        List<Label> snake = new List<Label>();
+        readonly Color InactiveColor = SystemColors.ControlDark;
+        readonly Color ActiveColor = Color.Green;
+        readonly string[] CounterStrings = new string[] { "3", "2", "1", "START", "" };
+        const int BlockSize = 16;
+        bool Pause = false;
+        public int FrameNumber = 0;
+        readonly Game MyGame = new Game();
+        readonly Label Food;
+        List<Label> MySnake = new List<Label>();
 
         public Form1()
         {
             InitializeComponent();
-            food = CreateLabel("", Color.Red);
+            Cursor.Hide();
+            Food = CreateLabel("", Color.Red);
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            SwitchBackColor(e.KeyCode, activeColor);
+            SwitchBackColor(e.KeyCode, ActiveColor);
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            SwitchBackColor(e.KeyCode, inactiveColor);
+            SwitchBackColor(e.KeyCode, InactiveColor);
+        }
+
+        private void Form1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 32 || e.KeyChar == 27)
+            {
+                Pause = !Pause;
+            }
         }
 
         private void SwitchBackColor(Keys key, Color color)
         {
-            Snake.Direction newDirection = new Snake.Direction();
-            switch (key)
+            bool? _ = key switch
             {
-                case Keys.Up:
-                    newDirection = Snake.Direction.up;
-                    labelUp.BackColor = color;
-                    break;
-                case Keys.Down:
-                    newDirection = Snake.Direction.down;
-                    labelDown.BackColor = color;
-                    break;
-                case Keys.Left:
-                    newDirection = Snake.Direction.left;
-                    labelLeft.BackColor = color;
-                    break;
-                case Keys.Right:
-                    newDirection = Snake.Direction.right;
-                    labelRight.BackColor = color;
-                    break;
-            }
-            g.snake.TryChangeDirection(newDirection);
+                Keys.Up => NewDirectionRequsted(Snake.Direction.up, labelUp, color),
+                Keys.Down => NewDirectionRequsted(Snake.Direction.down, labelDown, color),
+                Keys.Left => NewDirectionRequsted(Snake.Direction.left, labelLeft, color),
+                Keys.Right => NewDirectionRequsted(Snake.Direction.right, labelRight, color),
+                _ => null
+            };
+
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private bool NewDirectionRequsted(Snake.Direction newDirection, Label label, Color color)
         {
-            headLeft.Text = convert(g.snake.Head.position.column).ToString();
-            headTop.Text = convert(g.snake.Head.position.row).ToString();
-            gameSnakeLength.Text = g.snake.GetLength.ToString();
-            formSnakeLength.Text = snake.Count.ToString();
-            if (g.NextFrame())
+            label.BackColor = color;
+            return MyGame.snake.TryChangeDirection(newDirection);
+        }
+
+        private void Tick(object sender, EventArgs e)
+        {
+            if (Pause)
+            {
+                return;
+            }
+
+            if (MyGame.NextFrame())
             {
                 RefreshSnake();
-                RefreshLabelLocation(food, g.food.Position);
+                RefreshLabelLocation(Food, MyGame.food.Position);
+                gameSnakeLength.Text = MyGame.snake.GetLength.ToString();
+                return;
             }
-            else
+
+            Application.Exit();
+        }
+
+        private void Count(object sender, EventArgs e)
+        {
+            countdownLabel.Text = CounterStrings[FrameNumber].PadLeft(3);
+            System.Threading.Thread.Sleep(800);
+            FrameNumber++;
+            if (FrameNumber == 5)
             {
-                Application.Exit();
+                countdownLabel.Visible = false;
+                timer1.Tick -= new System.EventHandler(Count);
+                timer1.Tick += new System.EventHandler(Tick);
             }
         }
 
@@ -80,19 +100,20 @@ namespace Snake
 
         private void AlignSnakes()
         {
-            for (int i = 0; i < g.snake.GetLength - snake.Count; i++)
+            var count = MySnake.Count;
+            for (int i = 0; i < MyGame.snake.GetLength - count; i++)
             {
-                snake.Add(CreateLabel($"{snake.Count}"));
+                MySnake.Add(CreateLabel($"{MySnake.Count}"));
             }
         }
 
         private void RefreshSnakeLocations()
         {
             var i = 0;
-            var snakeElement = g.snake.Head;
+            var snakeElement = MyGame.snake.Head;
             while (snakeElement != null)
             { 
-                RefreshLabelLocation(snake[i++], snakeElement.position);
+                RefreshLabelLocation(MySnake[i++], snakeElement.position);
                 snakeElement = snakeElement.next;
             }
         }
@@ -112,10 +133,10 @@ namespace Snake
         {
             var label = new Label()
             {
-                BackColor = backColor ?? Color.FromArgb(255, 192, 128),
+                BackColor = backColor ?? Color.FromArgb(100, 255, 100),
                 Location = new Point(460, 300),
                 Name = name,
-                Size = new Size(blockSize, blockSize),
+                Size = new Size(BlockSize, BlockSize),
                 Visible = true
             };
 
@@ -123,6 +144,6 @@ namespace Snake
             return label;
         }
 
-        private int convert(int pos) => blockSize * pos;
+        private int convert(int pos) => 32 + BlockSize * pos;
     }
 }

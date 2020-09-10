@@ -10,7 +10,7 @@ namespace Snake
     {
         const int columns = 100;
         const int rows = 60;
-        readonly Collection<Position> allPositions = new Collection<Position>();
+        readonly Collection<Position> allPosibleFoodPositions = new Collection<Position>();
         int milisecondsBetweenFrames = 1000;
         public Snake snake = new Snake(rows, columns);
         public Food food = new Food();
@@ -23,19 +23,20 @@ namespace Snake
 
         private void LoadAllPositions()
         {
-            for (var i = 0; i < columns; i++)
+            for (var i = 1; i < columns - 1; i++)
             {
-                for (var j = 0; j < rows; j++)
+                for (var j = 1; j < rows - 1; j++)
                 {
-                    allPositions.Add(new Position(i, j));
+                    allPosibleFoodPositions.Add(new Position(i, j));
                 }
             }
         }
 
         public Position GetNewPositionForFood()
         {
-            int k = (new Random()).Next(1, columns * rows - snake.GetLength - 1);
-            return allPositions.Except(snake.GetBodyPositions())
+            var avoidSkippingAllPositions = 2;
+            int k = (new Random()).Next(1, allPosibleFoodPositions.Count - snake.GetLength - avoidSkippingAllPositions);
+            return allPosibleFoodPositions.Except(snake.GetBodyPositions())
                                .OrderBy(x => x)
                                .Skip(k - 1)
                                .First();
